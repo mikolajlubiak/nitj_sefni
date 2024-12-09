@@ -8,19 +8,28 @@
 #include "FastNoiseLite.h"
 
 // std
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <random>
+#include <string>
 
 namespace nitjsefni {
 
 constexpr std::size_t kWorldSize = 256;
 
-enum Cell : std::uint8_t {
+enum CellType : std::uint8_t {
   kWater,
   kGrass,
   kTree,
   kCellLength,
+};
+
+struct Cell {
+  CellType type;
+  std::string symbol;
+  std::array<std::uint8_t, 3> color;
 };
 
 class World {
@@ -30,14 +39,51 @@ public:
     FastNoiseLite noise;
     noise.SetNoiseType(noise_type);
 
+    constexpr std::array possible_grass_symbols = {",", ".", ""};
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> grass_dist(
+        0, possible_grass_symbols.size() - 1);
+
     // Gather noise data
     for (std::size_t y = 0; y < kWorldSize; y++) {
       for (std::size_t x = 0; x < kWorldSize; x++) {
-        float sample = MapValue(
+        float sample =
+            noise.GetNoise(static_cast<float>(x), static_cast<float>(y));
+
+        float mapped_sample = MapValue(
             noise.GetNoise(static_cast<float>(x), static_cast<float>(y)), -1.0f,
             1.0f, 0.0f, static_cast<float>(kCellLength - 1));
 
-        world_grid[y][x] = static_cast<Cell>(std::round(sample));
+        CellType cell_type = static_cast<CellType>(std::round(mapped_sample));
+        std::string symbol = "#";
+        std::array<std::uint8_t, 3> color;
+
+        switch (cell_type) {
+        case CellType::kGrass:
+          color = {0, 255, 0};
+          symbol = possible_grass_symbols[grass_dist(gen)];
+          break;
+        case CellType::kWater:
+          color = {0, 0, 255};
+          symbol = "~";
+          break;
+        case CellType::kTree:
+          color = {165, 42, 42};
+          symbol = "▲";
+          break;
+        }
+
+        const float color_intensitivity =
+            1.0f - std::abs(std::round(mapped_sample) - (mapped_sample));
+
+        std::transform(color.begin(), color.end(), color.begin(),
+                       [color_intensitivity](const std::uint8_t x) {
+                         return x * color_intensitivity;
+                       });
+
+        world_grid[y][x] = {cell_type, symbol, color};
       }
     }
   }

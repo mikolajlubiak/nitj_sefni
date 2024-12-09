@@ -39,35 +39,19 @@ public:
       for (std::size_t y = 0; y < screen.dimy(); y++) {
         for (std::size_t x = 0; x < screen.dimx(); x++) {
           ftxui::Color color = ftxui::Color(0, 0, 0);
-          std::string character = "#";
+          std::string symbol = "#";
 
           if (y < world_grid.size()) {
             if (x < world_grid[y].size()) {
               Cell cell = world_grid[y][x];
 
-              switch (cell) {
-              case Cell::kGrass:
-                color = ftxui::Color(0, 255, 0);
-                character = ".";
-                break;
-              case Cell::kWater:
-                color = ftxui::Color(0, 0, 255);
-                character = "~";
-                break;
-              case Cell::kTree:
-                color = ftxui::Color(165, 42, 42);
-                character = "▲";
-                break;
-              default:
-                color = ftxui::Color(0, 0, 0);
-                character = "#";
-                break;
-              }
+              color = ftxui::Color(cell.color[0], cell.color[1], cell.color[2]);
+              symbol = cell.symbol;
             }
           }
 
           // x and y are assumed to be multiples of 2 and 4 respectively
-          c.DrawText(x * 2, y * 4, character, color);
+          c.DrawText(x * 2, y * 4, symbol, color);
         }
       }
       return ftxui::canvas(std::move(c));
