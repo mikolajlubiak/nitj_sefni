@@ -47,7 +47,7 @@ enable_cxx_compiler_flag_if_supported("-pedantic")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add include directories
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_include_directories(${PROJECT_NAME} PRIVATE src PRIVATE includes)
 
 # Add libraries to link
 target_link_libraries(${PROJECT_NAME}
