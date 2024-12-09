@@ -1,3 +1,5 @@
+#pragma once
+
 // local
 #include "utility.hpp"
 
