@@ -10,9 +10,7 @@ unsigned_integer UnsignedSubstraction(const unsigned_integer a,
   return a - b;
 }
 
-template <typename old_type, typename new_type>
-new_type MapValue(old_type x, old_type old_min, old_type old_max,
-                  new_type new_min, new_type new_max) {
-  return static_cast<new_type>(new_min + (x - old_min) * (new_max - new_min) /
-                                             (old_max - old_min));
+template <typename T>
+T MapValue(T x, T old_min, T old_max, T new_min, T new_max) {
+  return new_min + (x - old_min) * (new_max - new_min) / (old_max - old_min);
 }

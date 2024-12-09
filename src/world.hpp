@@ -9,15 +9,16 @@
 
 // std
 #include <array>
+#include <cmath>
 #include <cstdint>
 
 namespace nitjsefni {
 
-constexpr std::size_t kWorldSize = 64;
+constexpr std::size_t kWorldSize = 256;
 
-enum Cell : std::uint32_t {
-  kGrass,
+enum Cell : std::uint8_t {
   kWater,
+  kGrass,
   kTree,
   kCellLength,
 };
@@ -32,9 +33,11 @@ public:
     // Gather noise data
     for (std::size_t y = 0; y < kWorldSize; y++) {
       for (std::size_t x = 0; x < kWorldSize; x++) {
-        world_grid[y][x] = MapValue(
+        float sample = MapValue(
             noise.GetNoise(static_cast<float>(x), static_cast<float>(y)), -1.0f,
-            1.0f, static_cast<Cell>(0), kCellLength);
+            1.0f, 0.0f, static_cast<float>(kCellLength - 1));
+
+        world_grid[y][x] = static_cast<Cell>(std::round(sample));
       }
     }
   }
