@@ -1,4 +1,3 @@
-
 // local
 #include "entity.hpp"
 #include "world.hpp"

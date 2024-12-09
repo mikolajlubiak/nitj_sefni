@@ -3,17 +3,17 @@
 // local
 #include "utility.hpp"
 
-// std
-#include <array>
-#include <cstdint>
-
 // libs
 // FastNoiseLite
 #include "FastNoiseLite.h"
 
+// std
+#include <array>
+#include <cstdint>
+
 namespace nitjsefni {
 
-constexpr std::size_t kWorldSize = 128;
+constexpr std::size_t kWorldSize = 64;
 
 enum Cell : std::uint32_t {
   kGrass,
