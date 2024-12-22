@@ -50,16 +50,15 @@ public:
     // Gather noise data
     for (std::size_t y = 0; y < kWorldSize; y++) {
       for (std::size_t x = 0; x < kWorldSize; x++) {
-        float sample =
-            noise.GetNoise(static_cast<float>(x), static_cast<float>(y));
-
-        float mapped_sample = MapValue(
+        const float mapped_sample = MapValue(
             noise.GetNoise(static_cast<float>(x), static_cast<float>(y)), -1.0f,
             1.0f, 0.0f, static_cast<float>(kCellLength - 1));
 
-        CellType cell_type = static_cast<CellType>(std::round(mapped_sample));
+        const CellType cell_type =
+            static_cast<CellType>(std::round(mapped_sample));
+
         std::string symbol = "#";
-        std::array<std::uint8_t, 3> color;
+        std::array<std::uint8_t, 3> color{};
 
         switch (cell_type) {
         case CellType::kGrass:
