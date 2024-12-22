@@ -4,28 +4,36 @@
 #include "utility.hpp"
 
 // std
+#include <array>
 #include <cstdint>
 
 namespace nitjsefni {
 
 class Entity {
 public:
-  void SubtractHealth(const std::uint32_t damage) {
-    health = UnsignedSubstraction(health, damage);
-  }
+  Entity() = default;
+  Entity(std::array<float, 2> position) : position(position) {}
+  Entity(std::array<float, 2> position, float health, float strength,
+         float defense)
+      : position(position), health(health), strength(strength),
+        defense(defense) {}
 
-  void SubtractStrength(const std::uint32_t weakening) {
-    strength = UnsignedSubstraction(strength, weakening);
-  }
+  void SubtractHealth(const float damage) { this->health -= damage; }
 
-  void SubtractDefense(const std::uint32_t weakening) {
-    defense = UnsignedSubstraction(defense, weakening);
-  }
+  void SubtractStrength(const float weakening) { this->strength -= weakening; }
+
+  void SubtractDefense(const float weakening) { this->defense -= weakening; }
+
+  void SetPosition(std::array<float, 2> position) { this->position = position; }
+
+  const std::array<float, 2> &GetPosition() const { return position; }
 
 private:
-  std::uint32_t health;
-  std::uint32_t strength;
-  std::uint32_t defense;
+  float health;
+  float strength;
+  float defense;
+
+  std::array<float, 2> position;
 };
 
 } // namespace nitjsefni
